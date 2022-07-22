@@ -3,6 +3,7 @@ import { useWeather } from '../../hooks/WeatherHook'
 import { IFavorite } from '../../models/favoriteModel'
 import { IWeatherCard } from '../../models/weatherCard'
 import { IWeatherApi2, IWeatherData } from '../../models/weatherModel'
+import LoadingComponent from '../../utils/loading/LoadingComponent'
 import BrowserComponent from './WeatherComponents/BrowserComponent'
 import WeatherCardComponent from './WeatherComponents/WeatherCardComponent'
 
@@ -29,6 +30,7 @@ const WeatherContainer = ({ email }: Props) => {
     const [isFavorite, setIsFavorite] = React.useState<boolean>(false)
     const [favoritesCities, setFavoritesCities] = React.useState<string | null>(localStorage.getItem(email))
     const [api, setApi] = React.useState<number>(2)
+    const [loading, setLoading] = React.useState<boolean>(false)
 
 
     const handleSearch = (city: string) => {
@@ -37,9 +39,10 @@ const WeatherContainer = ({ email }: Props) => {
 
     const handleClick = async (value: string) => {
         try {
+            setLoading(true)
             setFavoritesCities(reloadLocalStorage(email))
             setIsFavorite(false)
-            const date = new Date
+            const date = new Date()
             let city = ''
             if (api === 1) {
                 const weatherData: IWeatherData | undefined = await getWeatherData(value)
@@ -76,11 +79,11 @@ const WeatherContainer = ({ email }: Props) => {
             }
 
             verifyFavorite(city)
+            setLoading(false)
         } catch (error) {
             console.log("error apis: ", error)
         }
     }
-
     const handleFavorite = (data: IWeatherCard) => {
         let auxFavoritesCities: any[] = []
         if (favoritesCities) {
@@ -129,14 +132,15 @@ const WeatherContainer = ({ email }: Props) => {
                 valueApi={api}
             />
 
-            <WeatherCardComponent
+            {weatherCity !== initialValues ? !loading ? <WeatherCardComponent
                 data={weatherCity}
                 handleFavorites={handleFavorite}
                 handleDeleteFavorite={handleDeleteFavorite}
                 isFavorite={isFavorite}
                 setIsFavorite={setIsFavorite}
                 apiSelect={api}
-            />
+                size={500}
+            /> : <LoadingComponent fullScreen={false}/> :<></>}
         </div>
     )
 }

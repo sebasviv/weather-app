@@ -1,0 +1,9 @@
+.favorites-container {
+    display: flex;
+    flex-direction: row;
+    padding: 5% 20%;
+
+    .card-container {
+        margin: 20px;
+    }
+}

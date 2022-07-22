@@ -10,7 +10,7 @@ const Home = () => {
     const { user, loading } = useAuth()
 
     if (loading) {
-        return <LoadingComponent />
+        return <LoadingComponent fullScreen={true} />
     }
 
     return (

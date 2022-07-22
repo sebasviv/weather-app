@@ -1,9 +1,13 @@
 import { Box, CircularProgress } from '@mui/material'
 import React from 'react'
 
-const LoadingComponent = () => {
+interface Props {
+    fullScreen: boolean
+}
+
+const LoadingComponent = ({fullScreen}: Props) => {
     return (
-        <div className='loading-background'>
+        <div className={`${ fullScreen ? 'loading-background' : 'loading-background-small'}`}>
             <Box sx={{ display: 'flex' }}>
                 <CircularProgress />
             </Box>

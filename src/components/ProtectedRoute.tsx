@@ -9,7 +9,7 @@ export function ProtectedRoute({ children }: any) {
     const navigate = useNavigate()
     const { user, loading, logout } = useAuth()
     if (loading) {
-        return <LoadingComponent />
+        return <LoadingComponent fullScreen={true}/>
     }
 
     if (!user) {

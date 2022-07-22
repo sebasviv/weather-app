@@ -5,34 +5,25 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface Props {
     data: IWeatherCard
-    handleFavorites(data: IWeatherCard): void
+    handleFavorites?(data: IWeatherCard): void
     handleDeleteFavorite(data: IWeatherCard): void
     isFavorite: boolean;
     setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>
     apiSelect: number
+    size: number
 }
 
 
-const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isFavorite, setIsFavorite, apiSelect}: Props) => {
+const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isFavorite, setIsFavorite, apiSelect, size }: Props) => {
 
-   
+
+    const iconApi1 = `http://openweathermap.org/img/wn/${data.icon}@2x.png`
     return (
-        <Card sx={{ maxWidth: 500 }} className='card'>
+        <Card sx={{ maxWidth: size }} className='card'>
             <div className="weather-card">
 
                 <div className="search">
                     <h1 className="city">{data.city}</h1>
-                    {/* <button className="_edit">
-                        <img src="https://img.icons8.com/metro/26/000000/pencil.png" />
-                    </button> */}
-                    {/* <input type="text" value="London" placeholder="Search for a city..." /> */}
-                    {/* <div className="search-results">
-                        <ul id="results-list">
-                            <li>Paris</li>
-                            <li>Manila</li>
-                            <li>Beaverlodge</li>
-                        </ul>
-                    </div> */}
                 </div>
 
                 <p className="description">{data.description}</p>
@@ -44,7 +35,7 @@ const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isF
                     </div>
 
                     <div className="icon">
-                        <img src={`${apiSelect === 1 ? 'http://openweathermap.org/img/wn/${data.icon}@2x.png' : data.icon}`} alt="" />
+                        <img src={`${apiSelect === 1 ? iconApi1: data.icon}`} alt="" />
                     </div>
 
                     <div>
@@ -66,50 +57,19 @@ const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isF
                 </div>
 
                 <hr />
-
-                {/* <div className="hourly">
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="" />
-                        <span className="date">10 AM</span>
-                    </div>
-
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="" />
-                        <span className="date">11 AM</span>
-                    </div>
-
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="" />
-                        <span className="date">12 PM</span>
-                    </div>
-
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/09d@2x.png" alt="" />
-                        <span className="date">1 PM</span>
-                    </div>
-
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="" />
-                        <span className="date">2 PM</span>
-                    </div>
-
-                    <div>
-                        <img src="http://openweathermap.org/img/wn/02d@2x.png" alt="" />
-                        <span className="date">3 PM</span>
-                    </div>
-                </div> */}
             </div>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites" onClick={() => {
-                    if(!isFavorite){
-                        handleFavorites(data)
-                    }else {
+                    if (!isFavorite) {
+                        if (handleFavorites)
+                            handleFavorites(data)
+                    } else {
                         handleDeleteFavorite(data)
                     }
-                    
+
                     setIsFavorite(!isFavorite)
                 }}>
-                    <FavoriteIcon className={`${isFavorite ? 'favoriteIcon-red' : ''}`}/>
+                    <FavoriteIcon className={`${isFavorite ? 'favoriteIcon-red' : ''}`} />
                 </IconButton>
             </CardActions>
         </Card>
