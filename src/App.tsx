@@ -1,5 +1,6 @@
 
 import { Route, Routes } from "react-router-dom"
+import FavoriteComponent from "./components/Favorites/FavoriteComponent";
 import Home from "./components/Home/HomeComponent"
 import LoginComponent from "./components/Login/LoginComponent";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" element={<LoginComponent />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<ProtectedRoute><Home></Home></ProtectedRoute>} />
+        <Route path="/favorites" element={<ProtectedRoute><FavoriteComponent></FavoriteComponent></ProtectedRoute>} />
       </Routes>
     </AuthProvider>
   )
