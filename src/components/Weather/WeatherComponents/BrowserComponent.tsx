@@ -1,6 +1,7 @@
-import { FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material'
+import { FormControl, FormControlLabel, FormLabel, IconButton, InputAdornment, List, ListItem, ListItemButton, ListItemText, MenuItem, MenuList, Radio, RadioGroup, TextField } from '@mui/material'
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
+import { ISearchList } from '../../../models/searchListModel';
 
 interface Props {
     handleSearch(city: string): void
@@ -8,9 +9,10 @@ interface Props {
     handleClick(value: string): void
     handleSelectApi(value: string): void
     valueApi: number
+    searchList: ISearchList[]
 }
 
-const BrowserComponent = ({ handleSearch, valueSearch, handleClick, handleSelectApi, valueApi }: Props) => {
+const BrowserComponent = ({ handleSearch, valueSearch, handleClick, handleSelectApi, valueApi, searchList }: Props) => {
 
 
     return (
@@ -34,13 +36,22 @@ const BrowserComponent = ({ handleSearch, valueSearch, handleClick, handleSelect
                 value={valueSearch}
                 className={'browser'}
             />
-            <FormControl style={{marginTop: 20}}>
+            <MenuList>
+                {searchList &&
+                    searchList.map((item, index) => <MenuItem onClick={(e) => {
+                        handleClick(searchList[index].name)
+                        handleSearch('')
+                    }} key={index}>{item.name}</MenuItem>)
+                }
+            </MenuList>
+
+            <FormControl style={{ marginTop: 20 }}>
                 <FormLabel id="demo-radio-buttons-group-label">Select Api </FormLabel>
                 <RadioGroup
                     aria-labelledby="demo-radio-buttons-group-label"
                     defaultValue="female"
                     name="radio-buttons-group"
-                    onChange={(e) =>  handleSelectApi(e.currentTarget.value)}
+                    onChange={(e) => handleSelectApi(e.currentTarget.value)}
                     value={valueApi}
                 >
                     <FormControlLabel value="1" control={<Radio />} label="Api 1" />

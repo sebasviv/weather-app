@@ -4,6 +4,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
+
+    #demotext {
+        color: #FFFFFF;
+        background: #FFFFFF;
+        text-shadow: 2px 2px 0 #4074b5, 2px -2px 0 #4074b5, -2px 2px 0 #4074b5, -2px -2px 0 #4074b5, 2px 0px 0 #4074b5, 0px 2px 0 #4074b5, -2px 0px 0 #4074b5, 0px -2px 0 #4074b5;
+        color: #FFFFFF;
+        background: #FFFFFF;
+        font-size: 70px;
+        margin-bottom: 20px;
+    }
 
     form {
         display: flex;
@@ -11,6 +22,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .input-form {
         margin-bottom: 20px;
     }

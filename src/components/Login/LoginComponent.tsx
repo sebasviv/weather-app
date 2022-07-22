@@ -5,10 +5,11 @@ import { useAuth } from '../../context/autchContext';
 import { IRegisterForm } from '../../models/registerModel';
 import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
+import { IAlert } from '../../models/alertModels';
 
 const LoginComponent = () => {
 
-    const { login, loginWithGoogle } = useAuth()
+    const { login, loginWithGoogle, alert, setAlert } = useAuth()
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm<IRegisterForm>({ shouldUseNativeValidation: true, mode: 'onSubmit' });
     const [errorForm, setErrorForm] = React.useState('')
@@ -35,13 +36,19 @@ const LoginComponent = () => {
         
     }
 
+    const handleRegister = () => {
+        navigate('/register')
+    }
+
     return (
         <div className='login-form'>
+            <div id="demotext">Login</div>
             <form onSubmit={handleSubmit((data) => onSubmitData(data))}>
                 <TextField className='input-form' id="outlined-basic" label="E-mail" variant="outlined" inputProps={{ ...register("email") }} />
                 <TextField className='input-form' id="outlined-basic" label="Password" variant="outlined" inputProps={{ ...register("password") }} />
                 {errorForm ? <Typography className='error-form'>{errorForm}</Typography> : <></>}
                 <Button type='submit'>Login</Button>
+                <Button onClick={handleRegister}>Register</Button>
                 <IconButton
                     onClick={handleGoogleSignin}
                 >

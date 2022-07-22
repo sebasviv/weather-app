@@ -1,5 +1,7 @@
 
+import React from 'react'
 import { useAuth } from "../../context/autchContext"
+import { IAlert } from "../../models/alertModels";
 import LoadingComponent from "../../utils/loading/LoadingComponent"
 import WeatherContainer from "../Weather/WeatherContainer";
 

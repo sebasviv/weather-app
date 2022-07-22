@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [alert, setAlert] = useState()
 
     const signUp = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -44,7 +45,7 @@ export function AuthProvider({ children }) {
     }, [])
 
     return (
-        <authContext.Provider value={{ signUp, login, user, logout, loading, loginWithGoogle }}>
+        <authContext.Provider value={{ signUp, login, user, logout, loading, loginWithGoogle, setAlert, alert }}>
             {children}
         </authContext.Provider>
     )

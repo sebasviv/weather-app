@@ -3,3 +3,18 @@
 @import '../utils/loading/style.scss';
 @import '../components/Weather/styles.scss';
 @import '../components/Favorites/style.scss';
+@import '../components/DialogFavorites/style.scss';
+
+
+.main-container {
+    position: relative;
+    height: 100vh;
+}
+
+.alert-container {
+    width: 20%;
+    z-index: 1;
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+}

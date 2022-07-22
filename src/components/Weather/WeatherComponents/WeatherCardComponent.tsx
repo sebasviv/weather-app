@@ -1,7 +1,8 @@
-import { Card, CardActions, IconButton } from '@mui/material'
+import { Button, Card, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material'
 import React from 'react'
 import { IWeatherCard } from '../../../models/weatherCard'
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import DialogFavoritesComponent from '../../DialogFavorites/DialogFavoritesComponent';
 
 interface Props {
     data: IWeatherCard
@@ -11,11 +12,29 @@ interface Props {
     setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>
     apiSelect: number
     size: number
+    createAlert?(maxTemp: string, city: string): void
 }
 
 
-const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isFavorite, setIsFavorite, apiSelect, size }: Props) => {
+const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isFavorite, setIsFavorite, apiSelect, size, createAlert }: Props) => {
 
+    const [openDialog, setOpenDialog] = React.useState<boolean>(false)
+
+    const handleCloseDialog = () => {
+        if (handleFavorites) {
+            handleFavorites(data)
+            setOpenDialog(false)
+        }
+    }
+
+    const handleAgreeDialog = (maxTemp: string) => {
+
+        if (handleFavorites && createAlert) {
+            handleFavorites(data)
+            createAlert(maxTemp, data.city)
+            setOpenDialog(false)
+        }
+    }
 
     const iconApi1 = `http://openweathermap.org/img/wn/${data.icon}@2x.png`
     return (
@@ -35,7 +54,7 @@ const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isF
                     </div>
 
                     <div className="icon">
-                        <img src={`${apiSelect === 1 ? iconApi1: data.icon}`} alt="" />
+                        <img src={`${apiSelect === 1 ? iconApi1 : data.icon}`} alt="" />
                     </div>
 
                     <div>
@@ -61,8 +80,7 @@ const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isF
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites" onClick={() => {
                     if (!isFavorite) {
-                        if (handleFavorites)
-                            handleFavorites(data)
+                        setOpenDialog(true)
                     } else {
                         handleDeleteFavorite(data)
                     }
@@ -72,6 +90,11 @@ const WeatherCardComponent = ({ data, handleFavorites, handleDeleteFavorite, isF
                     <FavoriteIcon className={`${isFavorite ? 'favoriteIcon-red' : ''}`} />
                 </IconButton>
             </CardActions>
+            <DialogFavoritesComponent
+                handleAgreeDialog={handleAgreeDialog}
+                handleCloseDialog={handleCloseDialog}
+                openDialog={openDialog}
+            />
         </Card>
     )
 }

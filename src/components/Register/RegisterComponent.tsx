@@ -23,13 +23,19 @@ const Register = () => {
 
     }
 
+    const handleBack = ()  => {
+        navigate('/')
+    }
+
     return (
         <div className='register-form'>
+            <div id="demotext">Register</div>
             <form onSubmit={handleSubmit((data) => onSubmitData(data))}>
                 <TextField className='input-form' id="outlined-basic" label="E-mail" variant="outlined" inputProps={{ ...register("email") }} />
                 <TextField className='input-form' id="outlined-basic" label="Password" variant="outlined" inputProps={{ ...register("password") }} />
                 { errorForm ? <Typography className='error-form'>{errorForm}</Typography> : <></>}
                 <Button type='submit'>Register</Button>
+                <Button onClick={handleBack}>Back</Button>
             </form>
         </div>
 

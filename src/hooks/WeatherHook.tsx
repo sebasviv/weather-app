@@ -45,13 +45,27 @@ export const useWeather = () => {
         }
     }
 
+    const setAutocomplete = async (value: string) => {
+        if (value) {
+            const response: any = await axios.get(`${WeatherApi}/search.json?key=${ApiKeyTwo}&q=${value}`)
+                .then(function (response: AxiosResponse) {
+                    return response.data
+                })
+                .catch(function (error: any) {
+                    // handle error
+                    console.log('error serachList: ', error);
+                })
+            return response
+        }
+    }
+
     const setFavoriteItem = (email: any, data: any) => {
         return localStorage.setItem(`${email}`, JSON.stringify(data))
     }
 
     const getFavoriteItem = (email: string) => {
         const item = localStorage.getItem(`${email}`)
-        if(item) {
+        if (item) {
             const data = JSON.parse(item)
             return data
         }
@@ -66,7 +80,8 @@ export const useWeather = () => {
         setFavoriteItem,
         getFavoriteItem,
         reloadLocalStorage,
-        getWeatherDataV2 
+        getWeatherDataV2,
+        setAutocomplete
     }
 }
 

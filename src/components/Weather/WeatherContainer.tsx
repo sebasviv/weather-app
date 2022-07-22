@@ -1,6 +1,10 @@
 import React from 'react'
+import { useAuth } from '../../context/autchContext'
+import { useAlert } from '../../hooks/AlertHook'
 import { useWeather } from '../../hooks/WeatherHook'
+import { IAlert } from '../../models/alertModels'
 import { IFavorite } from '../../models/favoriteModel'
+import { ISearchList } from '../../models/searchListModel'
 import { IWeatherCard } from '../../models/weatherCard'
 import { IWeatherApi2, IWeatherData } from '../../models/weatherModel'
 import LoadingComponent from '../../utils/loading/LoadingComponent'
@@ -25,22 +29,30 @@ interface Props {
 const WeatherContainer = ({ email }: Props) => {
 
     const [searchCity, setSearchCity] = React.useState('')
-    const { getWeatherData, setFavoriteItem, reloadLocalStorage, getWeatherDataV2 } = useWeather()
+    const { getWeatherData, setFavoriteItem, reloadLocalStorage, getWeatherDataV2, setAutocomplete } = useWeather()
+    const { setNewAlert, reloadAlert } = useAlert()
     const [weatherCity, setWeatherCity] = React.useState<IWeatherCard>(initialValues)
     const [isFavorite, setIsFavorite] = React.useState<boolean>(false)
     const [favoritesCities, setFavoritesCities] = React.useState<string | null>(localStorage.getItem(email))
+    const [alertCities, setAlertCities] = React.useState<string | null>(localStorage.getItem(`${email}-Alerts`))
     const [api, setApi] = React.useState<number>(2)
     const [loading, setLoading] = React.useState<boolean>(false)
+    const { login, loginWithGoogle, alert, setAlert } = useAuth()
+    const [searchList, setSearchList] = React.useState<ISearchList[]>([])
 
-
-    const handleSearch = (city: string) => {
+    const handleSearch = async (city: string) => {
         setSearchCity(city)
+        let list: ISearchList[] = await setAutocomplete(city).then((response) => {
+            return response
+        })
+       setSearchList(list)
     }
 
     const handleClick = async (value: string) => {
         try {
             setLoading(true)
             setFavoritesCities(reloadLocalStorage(email))
+            setAlertCities(reloadAlert(email))
             setIsFavorite(false)
             const date = new Date()
             let city = ''
@@ -95,6 +107,14 @@ const WeatherContainer = ({ email }: Props) => {
             setFavoriteItem(email, auxFavoritesCities.toString())
         }
 
+        const newLogin: IAlert = {
+            open: true,
+            label: "Added to favorites",
+            onClose: () => setAlert({ open: false }),
+            severity: 'success'
+        }
+        setAlert(newLogin)
+
     }
 
 
@@ -104,6 +124,14 @@ const WeatherContainer = ({ email }: Props) => {
             let newArray = auxStorage.split(',')
             const auxArray = newArray.filter((city: any) => city !== cityDelete.city)
             setFavoriteItem(email, auxArray.join())
+
+            const newLogin: IAlert = {
+                open: true,
+                label: "Removed from favorites",
+                onClose: () => setAlert({ open: false }),
+                severity: 'info'
+            }
+            setAlert(newLogin)
         }
     }
 
@@ -122,6 +150,20 @@ const WeatherContainer = ({ email }: Props) => {
         setApi(parseInt(value))
     }
 
+    const handleCreateAlert = (maxTemp: string, city: string) => {
+        if (maxTemp) {
+            let auxAlertCities: any[] = []
+            if (alertCities) {
+                auxAlertCities.push(JSON.parse(alertCities))
+                let newAlertCities = [...auxAlertCities, `${city}-${maxTemp}`]
+                setNewAlert(email, newAlertCities.toString())
+            } else {
+                auxAlertCities.push(`${city}-${maxTemp}`)
+                setNewAlert(email, auxAlertCities.toString())
+            }
+        }
+    }
+
     return (
         <div className='weatherCard-container'>
             <BrowserComponent
@@ -130,17 +172,21 @@ const WeatherContainer = ({ email }: Props) => {
                 handleClick={handleClick}
                 handleSelectApi={handleSelectApi}
                 valueApi={api}
+                searchList={searchList}
             />
 
-            {weatherCity !== initialValues ? !loading ? <WeatherCardComponent
-                data={weatherCity}
-                handleFavorites={handleFavorite}
-                handleDeleteFavorite={handleDeleteFavorite}
-                isFavorite={isFavorite}
-                setIsFavorite={setIsFavorite}
-                apiSelect={api}
-                size={500}
-            /> : <LoadingComponent fullScreen={false}/> :<></>}
+            {weatherCity !== initialValues ? !loading ?
+                <WeatherCardComponent
+                    data={weatherCity}
+                    handleFavorites={handleFavorite}
+                    handleDeleteFavorite={handleDeleteFavorite}
+                    isFavorite={isFavorite}
+                    setIsFavorite={setIsFavorite}
+                    apiSelect={api}
+                    size={500}
+                    createAlert={handleCreateAlert}
+                />
+                : <LoadingComponent fullScreen={false} /> : <></>}
         </div>
     )
 }
